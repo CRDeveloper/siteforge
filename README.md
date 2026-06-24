@@ -23,6 +23,8 @@
 
 ## Repository Structure
 
+cd /workspace/siteforge
+
 ```
 siteforge/
 ├── apps/
@@ -209,6 +211,8 @@ cd apps/api && pytest tests/ -v
 
 ## Documentation
 
+- `docs/platform-spec.md` — Requirements, Architecture & Implementation Spec
 - `docs/01-ses-production-access-request.md` — AWS SES sandbox removal template
 - `docs/02-brevo-setup-guide.md` — Brevo onboarding for each client
 - `docs/03-platform-spec-v1.1.md` — Full platform specification
+- `docs/04-session-recap-and-next-steps.md` — Next Steps IDE Setup — Step by Step

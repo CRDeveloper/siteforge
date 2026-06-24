@@ -128,7 +128,7 @@ def create(
     # ── CDK Deploy ────────────────────────────────────────────────────────────
     if not skip_deploy:
         console.print(f"\n[bold]Deploying AWS infrastructure...[/bold]")
-        stack_name = f"SiteStack-{site_id}"
+        stack_name = f"SfSiteStack-{site_id}"
         try:
             result = subprocess.run(
                 ["python", "-m", "aws_cdk", "deploy", stack_name, "--require-approval", "never"],

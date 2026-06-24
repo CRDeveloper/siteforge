@@ -3,7 +3,7 @@
 SiteForge CDK v2 Infrastructure
 Usage:
   cdk deploy SharedStack
-  cdk deploy SiteStack-serenity-therapy
+  cdk deploy SfSiteStack-serenity-therapy
   cdk deploy --all
 """
 import aws_cdk as cdk
@@ -39,7 +39,7 @@ for site_config_path in sites_dir.glob("*/site-config.json"):
 
     SiteStack(
         app,
-        f"SiteStack-{site_id}",
+        f"SfSiteStack-{site_id}",
         site_config=config,
         shared_stack=shared,
         env=cdk.Environment(

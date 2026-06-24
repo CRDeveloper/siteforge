@@ -48,7 +48,7 @@ class SiteStack(cdk.Stack):
         self.table = dynamodb.Table(
             self,
             "MainTable",
-            table_name=f"{site_id}_main",
+            table_name=f"sf-{site_id}-main",
             partition_key=dynamodb.Attribute(
                 name="PK", type=dynamodb.AttributeType.STRING
             ),
@@ -130,7 +130,7 @@ class SiteStack(cdk.Stack):
         # Store site config as environment variable (non-sensitive parts)
         env_config = {
             "SITE_ID": site_id,
-            "TABLE_NAME": f"{site_id}_main",
+            "TABLE_NAME": f"sf-{site_id}-main",
             "UPLOADS_BUCKET": f"siteforge-{site_id}-uploads",
             "DOMAIN": domain,
             "DEFAULT_LANG": site_config.get("defaultLang", "en"),
