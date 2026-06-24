@@ -49,6 +49,8 @@ export const api = {
     login: (data: LoginInput) =>
       request<{ userId: string; firstName: string; role: string }>("POST", "/auth/login", data),
     logout: () => request("POST", "/auth/logout"),
+    verify: (token: string, email: string) =>
+      request<{ message: string }>("GET", `/auth/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`),
     forgotPassword: (email: string) =>
       request("POST", "/auth/forgot-password", { email }),
     resetPassword: (data: ResetPasswordInput) =>
