@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "book": "Book a Session",
+    "login": "Log In",
+    "dashboard": "My Appointments",
+    "admin": "Admin",
+    "logout": "Log Out"
+  },
+  "hero": {
+    "title": "Find Your Peace",
+    "subtitle": "Professional therapy tailored to your journey. Book a session and take the first step.",
+    "cta": "Book a Session",
+    "ctaSecondary": "Learn More"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Compassionate, evidence-based care for every stage of your healing journey.",
+    "bookThis": "Book This Service",
+    "duration": "{minutes} min session"
+  },
+  "about": {
+    "title": "About Our Practice",
+    "subtitle": "A safe, confidential space for growth and healing."
+  },
+  "contact": {
+    "title": "Find Us",
+    "address": "Address",
+    "phone": "Phone",
+    "hours": "Office Hours",
+    "getDirections": "Get Directions"
+  },
+  "auth": {
+    "register": "Create Account",
+    "login": "Log In",
+    "logout": "Log Out",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone number (optional)",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in",
+    "verifyTitle": "Check your email",
+    "verifyMessage": "We sent a verification link to {email}. Please check your inbox.",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "required": "This field is required"
+    }
+  },
+  "appointments": {
+    "title": "My Appointments",
+    "book": "Book an Appointment",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "noUpcoming": "No upcoming appointments.",
+    "bookFirst": "Book your first session",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Confirmed",
+      "declined": "Declined",
+      "rescheduled": "Rescheduled",
+      "cancelled": "Cancelled"
+    },
+    "cancel": "Cancel Appointment",
+    "cancelConfirm": "Are you sure you want to cancel this appointment?",
+    "cancelWarning": "Cancellations must be made at least {hours} hours in advance.",
+    "selectService": "Select a service",
+    "selectDate": "Select a date",
+    "selectTime": "Select a time",
+    "notes": "Notes (optional)",
+    "notesPlaceholder": "Any information you'd like to share with your therapist...",
+    "attachFile": "Attach a file (optional)",
+    "confirm": "Confirm Booking",
+    "confirmed": "Booking Confirmed!",
+    "confirmedMessage": "We've sent a confirmation to your email. Your therapist will be in touch."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "appointments": "Appointments",
+    "users": "Users",
+    "services": "Services",
+    "availability": "Availability",
+    "settings": "Settings",
+    "stats": {
+      "pending": "Pending",
+      "thisWeek": "This Week",
+      "today": "Today",
+      "totalUsers": "Total Users"
+    },
+    "actions": {
+      "accept": "Accept",
+      "decline": "Decline",
+      "reschedule": "Reschedule",
+      "message": "Message Client",
+      "save": "Save Changes"
+    },
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "accepted": "Confirmed",
+      "declined": "Declined",
+      "rescheduled": "Rescheduled"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "required": "Required",
+    "optional": "Optional",
+    "darkMode": "Dark mode",
+    "language": "Language"
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rights": "All rights reserved."
+  }
+}

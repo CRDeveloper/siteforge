@@ -1,0 +1,180 @@
+name: Deploy Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - "apps/frontend/**"
+      - "sites/**"
+      - "infra/**"
+  workflow_dispatch:
+    inputs:
+      site_id:
+        description: "Site ID to deploy (leave empty for all changed sites)"
+        required: false
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  # ── Detect which sites changed ──────────────────────────────────────────────
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.detect.outputs.sites }}
+      api_changed: ${{ steps.detect.outputs.api_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed sites
+        id: detect
+        run: |
+          if [ -n "${{ github.event.inputs.site_id }}" ]; then
+            SITES='["${{ github.event.inputs.site_id }}"]'
+          else
+            # Find changed site configs
+            CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^sites/' | cut -d/ -f2 | sort -u | jq -R . | jq -sc .)
+            # If API changed, redeploy all sites
+            API_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -q '^apps/api/' && echo 'true' || echo 'false')
+            if [ "$API_CHANGED" = "true" ]; then
+              SITES=$(ls sites/ | jq -R . | jq -sc .)
+            else
+              SITES=$CHANGED
+            fi
+          fi
+          echo "sites=$SITES" >> $GITHUB_OUTPUT
+          API_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -q '^apps/api/' && echo 'true' || echo 'false')
+          echo "api_changed=$API_CHANGED" >> $GITHUB_OUTPUT
+          echo "Sites to deploy: $SITES"
+
+  # ── Test API ────────────────────────────────────────────────────────────────
+  test-api:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.api_changed == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r apps/api/requirements.txt pytest moto boto3
+        working-directory: .
+      - name: Run tests
+        run: pytest apps/api/tests/ -v
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: testing
+          AWS_SECRET_ACCESS_KEY: testing
+
+  # ── Deploy each site ────────────────────────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, test-api]
+    if: |
+      always() &&
+      needs.detect-changes.outputs.sites != '[]' &&
+      needs.detect-changes.outputs.sites != 'null' &&
+      (needs.test-api.result == 'success' || needs.test-api.result == 'skipped')
+    strategy:
+      matrix:
+        site: ${{ fromJson(needs.detect-changes.outputs.sites) }}
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install CDK
+        run: pip install aws-cdk-lib constructs
+        working-directory: infra/cdk
+
+      - name: CDK deploy infrastructure
+        run: |
+          cd infra/cdk
+          cdk deploy SiteStack-${{ matrix.site }} \
+            --require-approval never \
+            --outputs-file /tmp/cdk-outputs-${{ matrix.site }}.json
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
+          CDK_DEFAULT_REGION: ${{ env.AWS_REGION }}
+
+      - name: Build & deploy frontend
+        run: |
+          SITE_CONFIG="sites/${{ matrix.site }}/site-config.json"
+          SITE_NAME=$(jq -r '.siteName' $SITE_CONFIG)
+          DEFAULT_LANG=$(jq -r '.defaultLang' $SITE_CONFIG)
+          SUPPORTED_LANGS=$(jq -c '.supportedLangs' $SITE_CONFIG)
+          THEME=$(jq -c '.theme' $SITE_CONFIG)
+          DOMAIN=$(jq -r '.domain' $SITE_CONFIG)
+          BUCKET="siteforge-${{ matrix.site }}-frontend"
+
+          cd apps/frontend
+
+          NEXT_PUBLIC_SITE_ID=${{ matrix.site }} \
+          NEXT_PUBLIC_SITE_NAME="$SITE_NAME" \
+          NEXT_PUBLIC_DEFAULT_LANG="$DEFAULT_LANG" \
+          NEXT_PUBLIC_SUPPORTED_LANGS="$SUPPORTED_LANGS" \
+          NEXT_PUBLIC_THEME="$THEME" \
+          NEXT_PUBLIC_API_URL="https://$DOMAIN/api" \
+          SITE_ID=${{ matrix.site }} \
+          NODE_ENV=production \
+          npm run build
+
+          # Upload static assets with long cache
+          aws s3 sync out/ s3://$BUCKET \
+            --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "*.html" \
+            --region ${{ env.AWS_REGION }}
+
+          # Upload HTML with no-cache
+          aws s3 sync out/ s3://$BUCKET \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --include "*.html" \
+            --region ${{ env.AWS_REGION }}
+
+          # CloudFront invalidation
+          DIST_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?Aliases.Items[?contains(@, '$DOMAIN')]].Id | [0]" \
+            --output text)
+          if [ "$DIST_ID" != "None" ] && [ -n "$DIST_ID" ]; then
+            aws cloudfront create-invalidation \
+              --distribution-id $DIST_ID \
+              --paths "/*"
+            echo "CloudFront invalidation created for $DIST_ID"
+          fi
+
+          echo "✓ Deployed ${{ matrix.site }} → https://$DOMAIN"
+
+      - name: Notify deployment
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          DOMAIN=$(jq -r '.domain' sites/${{ matrix.site }}/site-config.json)
+          echo "Site: ${{ matrix.site }} | Status: $STATUS | URL: https://$DOMAIN"

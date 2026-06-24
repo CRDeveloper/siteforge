@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+*.js.map
+
+# CDK
+infra/cdk/cdk.out/
+infra/cdk/.cdk.staging/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# AWS
+.aws-sam/
+samconfig.toml
+
+# Secrets — NEVER commit these
+**/secrets.json
+**/*.pem
+**/*.key
+**/credentials
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Turbo
+.turbo/
+
+# Testing
+coverage/
+.pytest_cache/
+htmlcov/
+
+# Logs
+*.log
+npm-debug.log*

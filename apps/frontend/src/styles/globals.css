@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme Variables ──────────────────────────────────────────────────────────
+   Injected by ThemeProvider from site-config.json at runtime.
+   These are the defaults; each site overrides them.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --color-primary: #5c7a6e;
+  --color-primary-light: #7a9d8f;
+  --color-primary-dark: #3d5c52;
+  --color-accent: #c9a96e;
+  --color-surface: #faf7f4;
+  --color-surface-raised: #ffffff;
+  --color-muted: #6b7280;
+  --color-text: #2c2c2c;
+  --color-border: #e5e0d8;
+
+  --font-display: "Cormorant Garamond";
+  --font-body: "DM Sans";
+
+  --radius: 0.5rem;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow-elevated: 0 4px 20px -2px rgb(0 0 0 / 0.10);
+
+  --header-height: 4rem;
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-surface: #1a1f1e;
+  --color-surface-raised: #242b29;
+  --color-text: #f0ede8;
+  --color-border: #2e3633;
+  --color-muted: #9ca3af;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --shadow-elevated: 0 4px 20px -2px rgb(0 0 0 / 0.4);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), Georgia, serif;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────────── */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded font-body
+           font-medium text-sm transition-all duration-200 focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50
+           disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-dark
+           focus-visible:ring-primary shadow-sm;
+  }
+
+  .btn-outline {
+    @apply btn border border-primary text-primary hover:bg-primary hover:text-white;
+  }
+
+  .btn-ghost {
+    @apply btn hover:bg-black/5 dark:hover:bg-white/5;
+  }
+
+  .card {
+    @apply bg-[var(--color-surface-raised)] rounded-[var(--radius)]
+           border border-[var(--color-border)] shadow-card p-6;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 rounded border border-[var(--color-border)]
+           bg-[var(--color-surface-raised)] text-[var(--color-text)]
+           placeholder:text-[var(--color-muted)]
+           focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
+           transition-colors duration-200 text-sm;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-[var(--color-text)] mb-1.5;
+  }
+
+  .section {
+    @apply py-16 md:py-24 px-4;
+  }
+
+  .container {
+    @apply max-w-6xl mx-auto;
+  }
+
+  .heading-display {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-normal;
+  }
+
+  .heading-section {
+    @apply font-display text-3xl md:text-4xl font-normal;
+  }
+
+  /* Staggered animation helpers */
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+}

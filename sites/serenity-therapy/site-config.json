@@ -1,0 +1,141 @@
+{
+  "siteId": "serenity-therapy",
+  "domain": "serenity-therapy.com",
+  "siteName": "Serenity Therapy",
+  "tagline": {
+    "en": "A calm space to heal and grow",
+    "es": "Un espacio tranquilo para sanar y crecer"
+  },
+  "defaultLang": "en",
+  "supportedLangs": ["en", "es"],
+  "theme": {
+    "primaryColor": "#5c7a6e",
+    "accentColor": "#c9a96e",
+    "backgroundColor": "#faf7f4",
+    "textColor": "#2c2c2c",
+    "mode": "light",
+    "fontDisplay": "Cormorant Garamond",
+    "fontBody": "DM Sans"
+  },
+  "email": {
+    "provider": "brevo",
+    "senderName": "Serenity Therapy",
+    "senderEmail": "hello@serenity-therapy.com",
+    "adminEmail": "admin@serenity-therapy.com",
+    "apiKeyParam": "/siteforge/serenity-therapy/brevo_api_key",
+    "contactListId": 1,
+    "templates": {
+      "verifyEmail": 1,
+      "passwordReset": 2,
+      "appointmentConfirmed": 3,
+      "appointmentAdminAlert": 4,
+      "appointmentReminder": 5,
+      "appointmentDeclined": 6,
+      "appointmentRescheduled": 7,
+      "appointmentCancelled": 8
+    }
+  },
+  "whatsapp": {
+    "enabled": false
+  },
+  "appointments": {
+    "windowDays": 30,
+    "cancellationHours": 24,
+    "reminderHoursBefore": 24
+  },
+  "content": {
+    "hero": {
+      "en": {
+        "title": "Find Your Peace",
+        "subtitle": "Professional therapy tailored to your journey. Book a session and take the first step.",
+        "cta": "Book a Session"
+      },
+      "es": {
+        "title": "Encuentra Tu Paz",
+        "subtitle": "Terapia profesional adaptada a tu camino. Reserva una sesión y da el primer paso.",
+        "cta": "Reservar Sesión"
+      }
+    },
+    "about": {
+      "en": {
+        "title": "About Our Practice",
+        "body": "We offer a safe, confidential space for individuals and couples seeking support through life's challenges. Our licensed therapists specialize in anxiety, depression, trauma, and relationship counseling."
+      },
+      "es": {
+        "title": "Nuestra Práctica",
+        "body": "Ofrecemos un espacio seguro y confidencial para personas y parejas que buscan apoyo. Nuestros terapeutas especializados ayudan con ansiedad, depresión, trauma y consejería de pareja."
+      }
+    },
+    "contact": {
+      "address": "123 Wellness Ave, Suite 4, Miami FL 33101",
+      "phone": "+1 (305) 555-0180",
+      "hours": {
+        "en": "Mon–Fri: 9am–7pm · Sat: 10am–3pm",
+        "es": "Lun–Vie: 9am–7pm · Sáb: 10am–3pm"
+      }
+    }
+  },
+  "services": [
+    {
+      "id": "individual-therapy",
+      "icon": "user",
+      "durationMinutes": 50,
+      "active": true,
+      "name": { "en": "Individual Therapy", "es": "Terapia Individual" },
+      "description": {
+        "en": "One-on-one sessions focused on your personal growth and healing.",
+        "es": "Sesiones individuales enfocadas en tu crecimiento personal."
+      }
+    },
+    {
+      "id": "couples-therapy",
+      "icon": "users",
+      "durationMinutes": 80,
+      "active": true,
+      "name": { "en": "Couples Therapy", "es": "Terapia de Pareja" },
+      "description": {
+        "en": "Strengthen your relationship with guided communication and tools.",
+        "es": "Fortalece tu relación con comunicación guiada y herramientas."
+      }
+    },
+    {
+      "id": "anxiety-depression",
+      "icon": "heart",
+      "durationMinutes": 50,
+      "active": true,
+      "name": { "en": "Anxiety & Depression", "es": "Ansiedad y Depresión" },
+      "description": {
+        "en": "Evidence-based approaches to manage anxiety and depressive symptoms.",
+        "es": "Enfoques basados en evidencia para manejar ansiedad y depresión."
+      }
+    },
+    {
+      "id": "trauma-recovery",
+      "icon": "shield",
+      "durationMinutes": 60,
+      "active": true,
+      "name": { "en": "Trauma Recovery", "es": "Recuperación de Trauma" },
+      "description": {
+        "en": "Trauma-informed care to help you process and heal from past experiences.",
+        "es": "Atención informada sobre trauma para procesar y sanar experiencias pasadas."
+      }
+    }
+  ],
+  "modules": [
+    "user-auth",
+    "appointments",
+    "admin-dashboard",
+    "notifications",
+    "file-uploads"
+  ],
+  "seo": {
+    "en": {
+      "title": "Serenity Therapy — Professional Counseling in Miami",
+      "description": "Licensed therapists in Miami offering individual, couples, and trauma therapy. Book your session online."
+    },
+    "es": {
+      "title": "Serenity Therapy — Consejería Profesional en Miami",
+      "description": "Terapeutas licenciados en Miami. Terapia individual, de pareja y recuperación de trauma. Reserva en línea."
+    }
+  }
+}

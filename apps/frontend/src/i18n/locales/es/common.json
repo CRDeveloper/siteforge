@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "book": "Reservar Sesión",
+    "login": "Iniciar Sesión",
+    "dashboard": "Mis Citas",
+    "admin": "Admin",
+    "logout": "Cerrar Sesión"
+  },
+  "hero": {
+    "title": "Encuentra Tu Paz",
+    "subtitle": "Terapia profesional adaptada a tu camino. Reserva una sesión y da el primer paso.",
+    "cta": "Reservar Sesión",
+    "ctaSecondary": "Saber Más"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "subtitle": "Atención compasiva y basada en evidencia para cada etapa de tu proceso de sanación.",
+    "bookThis": "Reservar Este Servicio",
+    "duration": "Sesión de {minutes} min"
+  },
+  "about": {
+    "title": "Nuestra Práctica",
+    "subtitle": "Un espacio seguro y confidencial para el crecimiento y la sanación."
+  },
+  "contact": {
+    "title": "Encuéntranos",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "hours": "Horario de Atención",
+    "getDirections": "Cómo Llegar"
+  },
+  "auth": {
+    "register": "Crear Cuenta",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "phone": "Teléfono (opcional)",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "signUp": "Regístrate",
+    "signIn": "Iniciar sesión",
+    "verifyTitle": "Revisa tu correo",
+    "verifyMessage": "Enviamos un enlace de verificación a {email}. Por favor revisa tu bandeja de entrada.",
+    "errors": {
+      "invalidEmail": "Por favor ingresa un correo electrónico válido",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "required": "Este campo es obligatorio"
+    }
+  },
+  "appointments": {
+    "title": "Mis Citas",
+    "book": "Reservar una Cita",
+    "upcoming": "Próximas",
+    "past": "Anteriores",
+    "noUpcoming": "No tienes citas próximas.",
+    "bookFirst": "Reserva tu primera sesión",
+    "status": {
+      "pending": "Pendiente",
+      "accepted": "Confirmada",
+      "declined": "Rechazada",
+      "rescheduled": "Reagendada",
+      "cancelled": "Cancelada"
+    },
+    "cancel": "Cancelar Cita",
+    "cancelConfirm": "¿Estás seguro de que deseas cancelar esta cita?",
+    "cancelWarning": "Las cancelaciones deben realizarse con al menos {hours} horas de anticipación.",
+    "selectService": "Selecciona un servicio",
+    "selectDate": "Selecciona una fecha",
+    "selectTime": "Selecciona una hora",
+    "notes": "Notas (opcional)",
+    "notesPlaceholder": "Cualquier información que desees compartir con tu terapeuta...",
+    "attachFile": "Adjuntar archivo (opcional)",
+    "confirm": "Confirmar Reserva",
+    "confirmed": "¡Reserva Confirmada!",
+    "confirmedMessage": "Enviamos una confirmación a tu correo. Tu terapeuta se pondrá en contacto contigo."
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "appointments": "Citas",
+    "users": "Usuarios",
+    "services": "Servicios",
+    "availability": "Disponibilidad",
+    "settings": "Configuración",
+    "stats": {
+      "pending": "Pendientes",
+      "thisWeek": "Esta Semana",
+      "today": "Hoy",
+      "totalUsers": "Total Usuarios"
+    },
+    "actions": {
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "reschedule": "Reagendar",
+      "message": "Mensaje al Cliente",
+      "save": "Guardar Cambios"
+    },
+    "filters": {
+      "all": "Todas",
+      "pending": "Pendientes",
+      "accepted": "Confirmadas",
+      "declined": "Rechazadas",
+      "rescheduled": "Reagendadas"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal. Por favor intenta de nuevo.",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "required": "Obligatorio",
+    "optional": "Opcional",
+    "darkMode": "Modo oscuro",
+    "language": "Idioma"
+  },
+  "footer": {
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "rights": "Todos los derechos reservados."
+  }
+}
