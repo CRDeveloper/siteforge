@@ -389,16 +389,16 @@ SITE_ID=serenity-therapy npm run dev
 
 ---
 
-## What's Next (Priority 2 & 3)
+## What's Next (Priority 1, 2 & 3)
 
-### Priority 1 — Pending:
+### Priority 1 — ✅ COMPLETE
 
-**CLI commands missing:**
+**CLI commands implemented:**
 
-| Command | What it does |
-|---|---|
-| `siteforge destroy --id X` | Confirm prompt → CDK destroy → SSM param cleanup |
-| `siteforge add-module --id X --module Y` | Appends module to site-config.json, deploys relevant Lambda function additions |
+| Command | What it does | Status |
+|---|---|---|
+| `siteforge destroy --id X` | Confirm prompt → CDK destroy → SSM param cleanup | ✅ |
+| `siteforge add-module --id X --module Y` | Appends module to site-config.json, deploys relevant Lambda function additions | ✅ |
 
 ### Priority 2 — Production Polish
 - [ ] SEO: `generateMetadata()` in landing page
