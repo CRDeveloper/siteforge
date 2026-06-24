@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, type User } from "@/lib/api";
-import { Alert, PageSpinner, Button } from "@/components/ui/index";
+import { Alert, PageSpinner } from "@/components/ui/index";
+import { Button } from "@/components/ui/Button";
 import { User as UserIcon, Mail, Phone, Globe, Save } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 

@@ -161,6 +161,7 @@ export interface User {
   verified: boolean;
   lang?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Appointment {

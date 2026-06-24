@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Alert, PageSpinner, Button } from "@/components/ui/index";
+import { Alert, PageSpinner } from "@/components/ui/index";
+import { Button } from "@/components/ui/Button";
 import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { format, addDays, startOfWeek, getDay } from "date-fns";
 
