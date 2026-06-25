@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2013-05-02
+
+Description: SiteForge Local Development Template — Lambda + DynamoDB via Docker
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Environment:
+      Variables:
+        SITE_ID: serenity-therapy
+        DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+        AWS_REGION: us-east-1
+
+Resources:
+  # Local DynamoDB Container (docker-compose will handle this)
+  SiteTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: siteforge-serenity-therapy
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: email-index
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: sk-index
+          KeySchema:
+            - AttributeName: sk
+              KeyType: HASH
+            - AttributeName: pk
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  # API Lambda Function
+  SiteForgeApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: siteforge-api-local
+      CodeUri: apps/api/
+      Handler: main.handler
+      Runtime: python3.12
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SiteForgeApiGateway
+            Path: /{proxy+}
+            Method: ANY
+        RootEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SiteForgeApiGateway
+            Path: /
+            Method: ANY
+
+  SiteForgeApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: SiteForge-Local-API
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # Scheduler Lambda (appointments reminders, cleanup)
+  SiteForgeScheduler:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: siteforge-scheduler-local
+      CodeUri: apps/api/
+      Handler: handlers.scheduler.handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          SITE_ID: serenity-therapy
+      Events:
+        DailyReminder:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(0 9 * * ? *)"
+
+  # SNS Topic for SES notifications (bounce/complaint)
+  SESNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: siteforge-serenity-therapy-ses-notifications
+      DisplayName: SES Bounce & Complaint Handler
+
+  # Lambda subscription to SNS
+  SESNotificationSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SESNotificationTopic
+      Protocol: lambda
+      Endpoint: !GetAtt SESBounceHandler.Arn
+
+  SESBounceHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: siteforge-ses-handler-local
+      CodeUri: apps/api/
+      Handler: handlers.webhooks.handler
+      Runtime: python3.12
+
+  SESBounceHandlerPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref SESBounceHandler
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref SESNotificationTopic
+
+Outputs:
+  ApiEndpoint:
+    Description: Local API Gateway endpoint
+    Value: !Sub "http://localhost:3001"
+  DynamoDBLocal:
+    Description: Local DynamoDB endpoint
+    Value: "http://localhost:8000"
+  SESTopicArn:
+    Description: SNS Topic for SES notifications
+    Value: !Ref SESNotificationTopic

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "SITE_ID=${SITE_ID:-serenity-therapy} next dev",
+    "prebuild": "node scripts/generate-sitemap.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -23,7 +24,8 @@
     "zod": "^3.23.0",
     "@hookform/resolvers": "^3.4.0",
     "date-fns": "^3.6.0",
-    "js-cookie": "^3.0.5"
+    "js-cookie": "^3.0.5",
+    "shared-types": "*"
   },
   "devDependencies": {
     "typescript": "^5.4.0",

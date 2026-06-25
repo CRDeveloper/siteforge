@@ -1,11 +1,22 @@
+import { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import type { SiteConfig } from "shared-types";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 // Loaded at build time (SSG)
+async function getSiteConfig(): Promise<SiteConfig | null> {
+  try {
+    const { config } = await api.config();
+    return config;
+  } catch {
+    return null;
+  }
+}
+
 async function getServices() {
   try {
     const { services } = await api.services();
@@ -15,22 +26,34 @@ async function getServices() {
   }
 }
 
-async function getSiteConfig() {
-  try {
-    const { config } = await api.config();
-    return config;
-  } catch {
-    return null;
-  }
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getSiteConfig();
+  const lang = process.env.NEXT_PUBLIC_DEFAULT_LANG || "en";
+  const seoData = (config?.seo as Record<string, { title: string; description: string }> | undefined)?.[lang];
+
+  return {
+    title: seoData?.title || config?.siteName || "SiteForge",
+    description: seoData?.description || "",
+    openGraph: {
+      title: seoData?.title || config?.siteName,
+      description: seoData?.description || "",
+      url: `https://${config?.domain || "example.com"}`,
+      type: "website",
+    },
+    alternates: {
+      canonical: `https://${config?.domain || "example.com"}`,
+    },
+  };
 }
 
 export default async function HomePage() {
-  const [services, config] = await Promise.all([getServices(), getSiteConfig()]);
+  const config = await getSiteConfig();
+  const services = await getServices();
   const lang = process.env.NEXT_PUBLIC_DEFAULT_LANG || "en";
 
-  const hero = config?.content?.hero as Record<string, Record<string, string>> | undefined;
-  const about = config?.content?.about as Record<string, Record<string, string>> | undefined;
-  const contact = config?.content?.contact as Record<string, unknown> | undefined;
+  const hero = (config?.content as any)?.hero as Record<string, Record<string, string>> | undefined;
+  const about = (config?.content as any)?.about as Record<string, Record<string, string>> | undefined;
+  const contact = (config?.content as any)?.contact as Record<string, unknown> | undefined;
 
   return (
     <>

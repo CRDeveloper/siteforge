@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /tmp/data"
+    volumes:
+      - dynamodb-data:/tmp/data
+    environment:
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: sns,sqs,s3,ssm
+      DEBUG: 1
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./local/init.sh:/docker-entrypoint-initaws.d/init.sh
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.local
+    ports:
+      - "3001:8000"
+    environment:
+      DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      LOCALSTACK_ENDPOINT: http://localstack:4566
+      SITE_ID: serenity-therapy
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+    volumes:
+      - ./apps/api:/app
+      - /app/.aws-sam
+    command: sam local start-api --host 0.0.0.0 --port 8000
+
+volumes:
+  dynamodb-data:

@@ -3,6 +3,20 @@
  * All requests go through CloudFront → /api/* → Lambda.
  */
 
+import type {
+  SiteConfig,
+  Service,
+  TimeSlot,
+  User,
+  Appointment,
+  DashboardStats,
+  RegisterInput,
+  LoginInput,
+  ResetPasswordInput,
+  CreateAppointmentInput,
+  UpdateAppointmentInput,
+} from "shared-types";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export class ApiError extends Error {
@@ -114,111 +128,17 @@ export const api = {
   },
 };
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-export interface SiteConfig {
-  siteId: string;
-  siteName: string;
-  tagline: Record<string, string>;
-  defaultLang: string;
-  supportedLangs: string[];
-  theme: Theme;
-  content: Record<string, unknown>;
-  seo: Record<string, unknown>;
-  appointments: { windowDays: number; cancellationHours: number };
-}
-
-export interface Theme {
-  primaryColor: string;
-  accentColor: string;
-  backgroundColor?: string;
-  textColor?: string;
-  mode: "light" | "dark";
-  fontDisplay: string;
-  fontBody: string;
-}
-
-export interface Service {
-  serviceId: string;
-  name: Record<string, string>;
-  description: Record<string, string>;
-  durationMinutes: number;
-  active: boolean;
-  icon?: string;
-}
-
-export interface TimeSlot {
-  time: string;
-  label: string;
-}
-
-export interface User {
-  userId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  role: "user" | "admin";
-  verified: boolean;
-  lang?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Appointment {
-  apptId: string;
-  userId: string;
-  userEmail: string;
-  userName: string;
-  serviceId: string;
-  serviceName: Record<string, string>;
-  date: string;
-  time: string;
-  status: "pending" | "accepted" | "declined" | "rescheduled" | "cancelled";
-  notes?: string;
-  attachmentKey?: string;
-  adminMessage?: string;
-  reminderSent: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface DashboardStats {
-  pendingAppointments: number;
-  acceptedThisWeek: number;
-  todayAppointments: number;
-  totalUsers: number;
-}
-
-export interface RegisterInput {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-export interface ResetPasswordInput {
-  token: string;
-  email: string;
-  password: string;
-}
-
-export interface CreateAppointmentInput {
-  serviceId: string;
-  date: string;
-  time: string;
-  notes?: string;
-  attachmentKey?: string;
-}
-
-export interface UpdateAppointmentInput {
-  status: "accepted" | "declined" | "rescheduled";
-  newDate?: string;
-  newTime?: string;
-  adminMessage?: string;
-}
+// Re-export types from shared-types
+export type {
+  SiteConfig,
+  Service,
+  TimeSlot,
+  User,
+  Appointment,
+  DashboardStats,
+  RegisterInput,
+  LoginInput,
+  ResetPasswordInput,
+  CreateAppointmentInput,
+  UpdateAppointmentInput,
+};
