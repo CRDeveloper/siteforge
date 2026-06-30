@@ -21,6 +21,7 @@ from .commands.list_sites import list_sites
 from .commands.destroy import destroy
 from .commands.seed import seed
 from .commands.add_module import add_module
+from .commands.dashboard import dashboard
 
 app = typer.Typer(
     name="siteforge",
@@ -35,6 +36,7 @@ app.command("list")(list_sites)
 app.command("destroy")(destroy)
 app.command("seed")(seed)
 app.command("add-module")(add_module)
+app.command("dashboard")(dashboard)
 
 if __name__ == "__main__":
     app()

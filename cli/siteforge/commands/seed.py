@@ -56,8 +56,8 @@ def seed(
     
     try:
         dynamodb = boto3.resource("dynamodb", region_name=region)
-        # Table name matches CDK: AATDev-{site_id}
-        table = dynamodb.Table(f"AATDev-{site_id}")
+        # Table name matches CDK: sf-{site_id}-main
+        table = dynamodb.Table(f"sf-{site_id}-main")
         
         with Progress(
             SpinnerColumn(),
