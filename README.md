@@ -253,7 +253,6 @@ Deploy the dashboard HTML to your admin domain (`siteforge.YOURADMINDOMAIN.com`)
 
 See `.kiro/specs/admin-dashboard-integration/deployment-guide.md` for detailed steps.
 
-
 ---
 
 ## Cost Estimate
