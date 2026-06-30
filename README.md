@@ -28,36 +28,41 @@ cd /workspace/siteforge
 ```
 siteforge/
 ├── apps/
-│   ├── api/                    # Python Lambda — all backend handlers
-│   │   ├── main.py             # Router entry point
-│   │   ├── handlers/           # auth, appointments, admin, public
-│   │   ├── middleware/         # JWT auth, CORS
-│   │   └── lib/                # db, email, response helpers
-│   └── frontend/               # Next.js app
+│   ├── api/                            # Python Lambda — all backend handlers
+│   │   ├── main.py                     # Router entry point
+│   │   ├── handlers/                   # auth, appointments, admin, public
+│   │   ├── middleware/                 # JWT auth, CORS
+│   │   └── lib/                        # db, email, response helpers
+│   └── frontend/                       # Next.js app
 │       └── src/
-│           ├── app/            # App Router pages
-│           │   ├── (public)/   # Landing page, booking flow
-│           │   ├── (auth)/     # Login, register, reset
-│           │   ├── (user)/     # Appointments dashboard
-│           │   └── (admin)/    # Admin panel
-│           ├── components/     # UI components
-│           ├── i18n/           # Translations (EN + ES)
-│           └── lib/            # API client, Zustand store
+│           ├── app/                    # App Router pages
+│           │   ├── (public)/           # Landing page, booking flow
+│           │   ├── (auth)/             # Login, register, reset
+│           │   ├── (user)/             # Appointments dashboard
+│           │   └── (admin)/            # Admin panel
+│           ├── components/             # UI components
+│           ├── i18n/                   # Translations (EN + ES)
+│           └── lib/                    # API client, Zustand store
 ├── infra/
-│   └── cdk/                    # CDK v2 stacks
-│       ├── app.py              # CDK app entry point
+│   └── cdk/                            # CDK v2 stacks
+│       ├── app.py                      # CDK app entry point
 │       └── stacks/
-│           ├── shared_stack.py # Shared IAM policies, SSM
-│           └── site_stack.py   # Per-site: S3, CF, DynamoDB, Lambda, APIGW
+│           ├── shared_stack.py         # Shared IAM policies, SSM
+│           └── site_stack.py           # Per-site: S3, CF, DynamoDB, Lambda, APIGW
 ├── cli/
-│   └── siteforge/              # siteforge CLI tool
-│       └── commands/           # create, deploy, config, list, seed, destroy
+│   └── siteforge/                      # siteforge CLI tool
+│       ├── commands/                   # create, deploy, config, list, seed, destroy, dashboard
+│       └── __main__.py                 # CLI entry point
 ├── sites/
-│   └── serenity-therapy/       # Sample client site
-│       └── site-config.json    # All site settings
+│   └── serenity-therapy/               # Sample client site
+│       └── site-config.json            # All site settings
+├── apps/admin/
+│   └── siteforge-dashboard.html        # Generated admin dashboard (auto-created)
+├── .kiro/specs/
+│   └── admin-dashboard-integration/    # Admin dashboard spec & tasks
 └── .github/
     └── workflows/
-        └── deploy.yml          # CI/CD — auto deploy on push
+        └── deploy.yml                  # CI/CD — auto deploy on push
 ```
 
 ---
@@ -185,6 +190,12 @@ Push to `main` → GitHub Actions automatically detects which sites changed and 
 ## Common Commands
 
 ```bash
+# Generate admin dashboard (lists all sites)
+python -m cli.siteforge dashboard
+
+# Generate dashboard with live health checks (3s timeout per site)
+python -m cli.siteforge dashboard --ping
+
 # Update a site's theme color
 python -m cli.siteforge config --id serenity-therapy --set theme.primaryColor=#3b82f6
 
@@ -203,6 +214,48 @@ cd apps/api && pytest tests/ -v
 
 ---
 
+## Admin Dashboard
+
+The CLI includes a dashboard command that generates a static HTML status page for all configured sites:
+
+```bash
+# Generate dashboard at apps/admin/siteforge-dashboard.html
+python -m cli.siteforge dashboard
+
+# With optional health checks
+python -m cli.siteforge dashboard --ping
+
+# Custom output path
+python -m cli.siteforge dashboard --output /custom/path/dashboard.html
+```
+
+The dashboard displays:
+- Site name, domain, and admin URL (clickable links)
+- Default and supported languages
+- Active modules and features
+- Last configuration update timestamp
+- Optional online/offline status (with --ping flag)
+
+See `.kiro/specs/admin-dashboard-integration/` for complete specification and deployment guide.
+
+---
+
+## Integration with Admin Platform
+
+### Standalone Admin Portal (Recommended)
+
+Deploy the dashboard HTML to your admin domain (`siteforge.YOURADMINDOMAIN.com`):
+
+1. Generate dashboard: `python -m cli.siteforge dashboard`
+2. Serve `apps/admin/siteforge-dashboard.html` via your web server
+3. Configure DNS CNAME to point to your CloudFront distribution
+4. Optional: Add authentication middleware for internal teams only
+
+See `.kiro/specs/admin-dashboard-integration/deployment-guide.md` for detailed steps.
+
+
+---
+
 ## Cost Estimate
 
 ~$2/site/month at < 1,000 users/month. See full breakdown in `docs/03-platform-spec-v1.1.md`.
@@ -211,8 +264,19 @@ cd apps/api && pytest tests/ -v
 
 ## Documentation
 
+### Platform & Architecture
 - `docs/platform-spec.md` — Requirements, Architecture & Implementation Spec
+- `docs/03-platform-spec-v1.1.md` — Full platform specification
+- `README.md` (this file) — Getting started & quick reference
+
+### Setup & Deployment
 - `docs/01-ses-production-access-request.md` — AWS SES sandbox removal template
 - `docs/02-brevo-setup-guide.md` — Brevo onboarding for each client
-- `docs/03-platform-spec-v1.1.md` — Full platform specification
-- `docs/04-session-recap-and-next-steps.md` — Next Steps IDE Setup — Step by Step
+- `docs/04-session-recap-and-next-steps.md` — IDE Setup & Next Steps
+
+### Admin Dashboard
+- `.kiro/specs/admin-dashboard-integration/README.md` — Quick start guide
+- `.kiro/specs/admin-dashboard-integration/overview.md` — Architecture & features
+- `.kiro/specs/admin-dashboard-integration/tasks.md` — Implementation tasks
+- `.kiro/specs/admin-dashboard-integration/deployment-guide.md` — Deployment steps
+- `.kiro/specs/admin-dashboard-integration/COMPLETION_SUMMARY.md` — Phase 1 summary
