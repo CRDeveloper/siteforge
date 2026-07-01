@@ -29,6 +29,7 @@ const nextConfig = {
     NEXT_PUBLIC_DEFAULT_LANG: siteConfig.defaultLang || "en",
     NEXT_PUBLIC_SUPPORTED_LANGS: JSON.stringify(siteConfig.supportedLangs || ["en"]),
     NEXT_PUBLIC_THEME: JSON.stringify(siteConfig.theme || {}),
+    NEXT_PUBLIC_GA_TRACKING_ID: siteConfig.analytics?.gaTrackingId || process.env.GA_TRACKING_ID || "",
   },
   // next-intl config
   experimental: {},

@@ -29,7 +29,10 @@ async function getServices() {
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getSiteConfig();
   const lang = process.env.NEXT_PUBLIC_DEFAULT_LANG || "en";
-  const seoData = (config?.seo as Record<string, { title: string; description: string }> | undefined)?.[lang];
+  const seoData = (config?.seo as Record<string, { title: string; description: string; image?: string }> | undefined)?.[lang];
+  const domain = config?.domain || "example.com";
+  const baseUrl = `https://${domain}`;
+  const ogImage = seoData?.image || `${baseUrl}/og-image.jpg`;
 
   return {
     title: seoData?.title || config?.siteName || "SiteForge",
@@ -37,11 +40,28 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: seoData?.title || config?.siteName,
       description: seoData?.description || "",
-      url: `https://${config?.domain || "example.com"}`,
+      url: baseUrl,
       type: "website",
+      siteName: config?.siteName || "SiteForge",
+      locale: lang,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: seoData?.title || config?.siteName || "SiteForge",
+        },
+      ],
     },
     alternates: {
-      canonical: `https://${config?.domain || "example.com"}`,
+      canonical: baseUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   };
 }
@@ -50,13 +70,39 @@ export default async function HomePage() {
   const config = await getSiteConfig();
   const services = await getServices();
   const lang = process.env.NEXT_PUBLIC_DEFAULT_LANG || "en";
+  const domain = config?.domain || "example.com";
 
   const hero = (config?.content as any)?.hero as Record<string, Record<string, string>> | undefined;
   const about = (config?.content as any)?.about as Record<string, Record<string, string>> | undefined;
   const contact = (config?.content as any)?.contact as Record<string, unknown> | undefined;
 
+  // JSON-LD structured data
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: config?.siteName || "SiteForge",
+    description: config?.seo?.[lang]?.description || "",
+    url: `https://${domain}`,
+    image: config?.seo?.[lang]?.image || `https://${domain}/og-image.jpg`,
+    telephone: (contact?.phone as string) || "",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: (contact?.address as string) || "",
+      addressCountry: "US",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "Customer Service",
+      email: config?.email?.adminEmail || "",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
       <Header />
       <main>
         {/* ── Hero ─────────────────────────────────────────────── */}

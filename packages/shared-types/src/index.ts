@@ -15,9 +15,22 @@ export interface SiteConfig {
   theme: Theme;
   content: SiteContent;
   seo: Record<string, SEOMetadata>;
+  email?: EmailConfig;
   appointments: AppointmentSettings;
   modules: string[];
   services?: Service[];
+  analytics?: AnalyticsConfig;
+}
+
+export interface EmailConfig {
+  adminEmail: string;
+  senderEmail: string;
+  senderName: string;
+  provider: "brevo" | "ses";
+}
+
+export interface AnalyticsConfig {
+  gaTrackingId?: string;
 }
 
 export interface Theme {
@@ -43,6 +56,7 @@ export interface SiteContent {
 export interface SEOMetadata {
   title: string;
   description: string;
+  image?: string;
 }
 
 export interface AppointmentSettings {

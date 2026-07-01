@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { GoogleAnalytics } from "@/components/layout/GoogleAnalytics";
 import { Providers } from "@/lib/providers";
 import "@/styles/globals.css";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "SiteForge";
 const theme = JSON.parse(process.env.NEXT_PUBLIC_THEME || "{}");
+const gaTrackingId = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "";
 
 export const metadata: Metadata = {
   title: siteName,
@@ -39,6 +41,7 @@ export default async function RootLayout({
         <link href={googleFontsUrl} rel="stylesheet" />
       </head>
       <body>
+        <GoogleAnalytics trackingId={gaTrackingId} />
         <ThemeProvider theme={theme}>
           <Providers>
             <NextIntlClientProvider locale={locale} messages={messages}>

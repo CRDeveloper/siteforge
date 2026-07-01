@@ -91,7 +91,7 @@ export default function AdminServicesPage() {
                 </Button>
                 <Button
                   size="sm" variant="ghost"
-                  onClick={() => svc.active && deleteMutation.mutate(svc.serviceId)}
+                  onClick={() => svc.active && deleteMutation.mutate(svc.serviceId!)}
                   className="text-red-500 hover:text-red-600 hover:bg-red-50"
                 >
                   <Trash2 className="w-3.5 h-3.5" />

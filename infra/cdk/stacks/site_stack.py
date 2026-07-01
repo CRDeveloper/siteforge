@@ -90,6 +90,14 @@ class SiteStack(cdk.Stack):
             removal_policy=RemovalPolicy.DESTROY,
             auto_delete_objects=True,
             versioned=False,
+            cors=[
+                s3.CorsRule(
+                    allowed_methods=[s3.HttpMethods.GET, s3.HttpMethods.HEAD],
+                    allowed_origins=[f"https://{domain}", f"https://www.{domain}"],
+                    allowed_headers=["*"],
+                    max_age=3000,
+                )
+            ],
         )
 
         # ── 3. S3 — Uploads Bucket ────────────────────────────────────────────
@@ -266,12 +274,25 @@ class SiteStack(cdk.Stack):
             )
 
         # ── 7. CloudFront Distribution ────────────────────────────────────────
+        # Origin Access Identity for secure S3 access
+        oai = cf.OriginAccessIdentity(
+            self,
+            "FrontendOAI",
+            comment=f"SiteForge {site_id} frontend OAI",
+        )
+
+        # Grant CloudFront read access to frontend bucket
+        self.frontend_bucket.grant_read(oai)
+
         api_origin = origins.HttpOrigin(
             f"{self.http_api.api_id}.execute-api.{self.region}.amazonaws.com",
             origin_path="/",
         )
 
-        s3_origin = origins.S3Origin(self.frontend_bucket)
+        s3_origin = origins.S3Origin(
+            self.frontend_bucket,
+            origin_access_identity=oai,
+        )
 
         self.distribution = cf.Distribution(
             self,
@@ -308,6 +329,7 @@ class SiteStack(cdk.Stack):
                 ),
             ],
             price_class=cf.PriceClass.PRICE_CLASS_100,  # US/EU only — cheaper
+            enable_ipv6=True,
         )
 
         # ── 8. EventBridge — Appointment Reminder Scheduler ──────────────────

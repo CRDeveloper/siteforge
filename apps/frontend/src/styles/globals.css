@@ -60,15 +60,11 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Utility classes ─────────────────────────────────────────────────────── */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded font-body
-           font-medium text-sm transition-all duration-200 focus-visible:outline-none
-           focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50
-           disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded font-body font-medium text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-primary {
-    @apply btn bg-primary text-white hover:bg-primary-dark
-           focus-visible:ring-primary shadow-sm;
+    @apply btn bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary shadow-sm;
   }
 
   .btn-outline {
@@ -80,16 +76,11 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .card {
-    @apply bg-[var(--color-surface-raised)] rounded-[var(--radius)]
-           border border-[var(--color-border)] shadow-card p-6;
+    @apply bg-[var(--color-surface-raised)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-card p-6;
   }
 
   .input {
-    @apply w-full px-4 py-3 rounded border border-[var(--color-border)]
-           bg-[var(--color-surface-raised)] text-[var(--color-text)]
-           placeholder:text-[var(--color-muted)]
-           focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
-           transition-colors duration-200 text-sm;
+    @apply w-full px-4 py-3 rounded border border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-200 text-sm;
   }
 
   .label {

@@ -67,7 +67,7 @@ export default function AvailabilityPage() {
       setError(null);
       const times = (slots[date] || []).filter((t) => t !== time);
       if (times.length === 0) {
-        await api.admin.deleteAvailability(`${date}_${time}`);
+        await api.admin.deleteAvailability(date, time);
       } else {
         await api.admin.createAvailability(date, times);
       }

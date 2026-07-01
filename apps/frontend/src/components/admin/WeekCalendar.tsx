@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format, addDays, startOfWeek, isSameDay } from "date-fns";
-import { Button } from "./Button";
+import { Button } from "@/components/ui/Button";
 import { TimeSlot } from "shared-types";
 
 interface WeekCalendarProps {

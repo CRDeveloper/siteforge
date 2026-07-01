@@ -18,10 +18,14 @@ env/
 # Next.js
 .next/
 out/
+next-env.d.ts
+package-lock.json
+tsconfig.json
 
 # Build outputs
 dist/
 *.js.map
+*.tsbuildinfo
 
 # CDK
 infra/cdk/cdk.out/
@@ -63,3 +67,8 @@ htmlcov/
 # Logs
 *.log
 npm-debug.log*
+
+# Generated files
+apps/frontend/public/sitemap.xml
+/public/sitemap.xml
+/tsconfig.json

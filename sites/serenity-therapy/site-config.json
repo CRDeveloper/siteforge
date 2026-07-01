@@ -137,5 +137,6 @@
       "title": "Serenity Therapy — Consejería Profesional en Miami",
       "description": "Terapeutas licenciados en Miami. Terapia individual, de pareja y recuperación de trauma. Reserva en línea."
     }
-  }
+  },
+  "analytics": { "gaTrackingId": "G-XXXXXXXXXX" }
 }

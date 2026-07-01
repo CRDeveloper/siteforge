@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -51,9 +53,9 @@ export default function BookPage() {
   const bookMutation = useMutation({
     mutationFn: () =>
       api.appointments.create({
-        serviceId: selectedService!.serviceId,
-        date: selectedDate,
-        time: selectedTime,
+        serviceId: selectedService!.serviceId!,
+        date: selectedDate!,
+        time: selectedTime!,
         notes,
       }),
     onSuccess: () => setStep("success"),

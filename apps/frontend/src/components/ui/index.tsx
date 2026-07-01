@@ -1,5 +1,6 @@
 import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { clsx } from "clsx";
+export { Button } from "./Button";
 
 // ── Input ──────────────────────────────────────────────────────────────────
 
@@ -76,11 +77,23 @@ export function FormField({ label, error, required, children, hint }: FormFieldP
 // ── Alert ──────────────────────────────────────────────────────────────────
 
 interface AlertProps {
-  type?: "error" | "success" | "info" | "warning";
+  variant?: "error" | "destructive" | "success" | "info" | "warning";
+  type?: "error" | "destructive" | "success" | "info" | "warning";
   children: React.ReactNode;
+  className?: string;
 }
 
-export function Alert({ type = "error", children }: AlertProps) {
+export function Alert({ variant, type, children, className }: AlertProps) {
+  const alertType = variant || type || "error";
+  const variantMap = {
+    error: "error",
+    destructive: "error",
+    success: "success",
+    info: "info",
+    warning: "warning",
+  };
+  
+  const mappedType = variantMap[alertType as keyof typeof variantMap] as keyof typeof styles;
   const styles = {
     error: "bg-red-50 border-red-200 text-red-700",
     success: "bg-green-50 border-green-200 text-green-700",
@@ -90,8 +103,8 @@ export function Alert({ type = "error", children }: AlertProps) {
   const icons = { error: "⚠", success: "✓", info: "ℹ", warning: "⚠" };
 
   return (
-    <div className={clsx("flex gap-2 p-4 rounded border text-sm", styles[type])}>
-      <span className="flex-shrink-0">{icons[type]}</span>
+    <div className={clsx("flex gap-2 p-4 rounded border text-sm", styles[mappedType], className)}>
+      <span className="flex-shrink-0">{icons[mappedType]}</span>
       <span>{children}</span>
     </div>
   );

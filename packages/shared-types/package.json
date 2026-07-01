@@ -1,0 +1,21 @@
+{
+  "name": "shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for SiteForge platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "types",
+    "siteforge"
+  ],
+  "author": "",
+  "license": "MIT"
+}
