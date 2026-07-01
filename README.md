@@ -21,6 +21,83 @@
 
 ---
 
+## Automation Scripts
+
+SiteForge includes automation scripts for bootstrap setup, site management, local development, and Slack notifications.
+
+### Quick Start
+
+```bash
+# 1. Initial setup (one-time)
+./scripts/setup.sh
+
+# 2. Create a site
+./scripts/manage.sh create serenity-therapy \
+  --domain serenity-therapy.com \
+  --admin admin@serenity-therapy.com \
+  --name "Serenity Therapy" \
+  --color "#5c7a6e"
+
+# 3. Deploy
+./scripts/manage.sh deploy serenity-therapy
+
+# 4. Local development
+./scripts/manage.sh local serenity-therapy
+```
+
+### Port Allocation
+
+| Service | Port | Notes |
+|---------|------|-------|
+| Frontend Dev | 7000 | Non-conflicting with other projects |
+| API Local | 8200 | Non-conflicting with other projects |
+
+Ports are automatically freed on exit (Ctrl+C or 'q').
+
+### Management Commands
+
+```bash
+./scripts/manage.sh init              # Bootstrap setup
+./scripts/manage.sh create <site-id>  # Create new site
+./scripts/manage.sh deploy <site-id>  # Deploy to AWS
+./scripts/manage.sh local <site-id>   # Start local dev server
+./scripts/manage.sh status            # List all sites
+./scripts/manage.sh logs <site-id>    # View recent logs
+./scripts/manage.sh config <site-id>  # View/edit configuration
+./scripts/manage.sh cleanup           # Stop servers and free ports
+./scripts/manage.sh destroy <site-id> # ⚠️ Irreversible deletion
+./scripts/manage.sh help              # Show all commands
+```
+
+### Slack Integration
+
+Get deployment notifications in Slack:
+
+1. Create a Slack webhook (https://api.slack.com/apps)
+2. Store in AWS Secrets Manager:
+   ```bash
+   aws secretsmanager create-secret \
+     --name siteforge/slack-webhook-url \
+     --secret-string "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+   ```
+3. Enable in `.env`:
+   ```bash
+   SLACK_NOTIFICATIONS_ENABLED=true
+   SLACK_SECRET_NAME=siteforge/slack-webhook-url
+   ```
+
+### Scripts Overview
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/setup.sh` | One-time bootstrap (prerequisites, CDK, shared stack) |
+| `scripts/manage.sh` | Main orchestration (10 commands) |
+| `scripts/slack_notifier.py` | Slack webhook integration |
+
+**Full documentation**: `scripts/AUTOMATION_SETUP_GUIDE.md`
+
+---
+
 ## Repository Structure
 
 cd /workspace/siteforge
@@ -56,6 +133,11 @@ siteforge/
 ├── sites/
 │   └── serenity-therapy/               # Sample client site
 │       └── site-config.json            # All site settings
+├── scripts/
+│   ├── setup.sh                        # Bootstrap (one-time)
+│   ├── manage.sh                       # Main orchestration
+│   ├── slack_notifier.py               # Slack integration
+│   └── AUTOMATION_SETUP_GUIDE.md       # Full reference
 ├── apps/admin/
 │   └── siteforge-dashboard.html        # Generated admin dashboard (auto-created)
 ├── .kiro/specs/
@@ -68,6 +150,10 @@ siteforge/
 ---
 
 ## Quick Start
+
+> **Recommended**: Use the automation scripts for a streamlined setup. See [Automation Scripts](#automation-scripts) section above for details.
+>
+> The steps below show the manual CLI approach for advanced users.
 
 ### Prerequisites
 
@@ -272,6 +358,7 @@ See `.kiro/specs/admin-dashboard-integration/deployment-guide.md` for detailed s
 - `docs/01-ses-production-access-request.md` — AWS SES sandbox removal template
 - `docs/02-brevo-setup-guide.md` — Brevo onboarding for each client
 - `docs/04-session-recap-and-next-steps.md` — IDE Setup & Next Steps
+- `scripts/AUTOMATION_SETUP_GUIDE.md` — Complete automation scripts reference
 
 ### Admin Dashboard
 - `.kiro/specs/admin-dashboard-integration/README.md` — Quick start guide
