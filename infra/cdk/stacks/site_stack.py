@@ -18,6 +18,7 @@ from aws_cdk import (
     aws_events as events,
     aws_events_targets as targets,
     aws_s3_deployment as s3deploy,
+    aws_sqs as sqs,
     Duration, RemovalPolicy,
 )
 from constructs import Construct
@@ -169,9 +170,9 @@ class SiteStack(cdk.Stack):
                 ),
             ),
             environment=env_config,
-            timeout=Duration.seconds(29),
-            memory_size=256,
-            tracing=lambda_.Tracing.ACTIVE,
+            timeout=Duration.seconds(90),
+            memory_size=512,
+            tracing=lambda_.Tracing.PASS_THROUGH,
         )
 
         # Attach base policy + site-specific permissions
@@ -317,12 +318,25 @@ class SiteStack(cdk.Stack):
             description="Triggers Lambda to send 24h appointment reminders",
             schedule=events.Schedule.cron(hour="14", minute="0"),  # 2pm UTC daily
         )
+
+        # DLQ for failed reminder events
+        reminder_dlq = sqs.Queue(
+            self,
+            "ReminderDLQ",
+            queue_name=f"siteforge-{site_id}-reminders-dlq",
+            retention_period=Duration.days(14),
+        )
+
+        # Add target with DLQ and retry logic
         reminder_rule.add_target(
             targets.LambdaFunction(
                 self.lambda_fn,
                 event=events.RuleTargetInput.from_object(
                     {"source": "eventbridge", "action": "send_reminders"}
                 ),
+                dead_letter_queue=reminder_dlq,
+                max_event_age=Duration.hours(2),
+                retry_attempts=1,
             )
         )
 
@@ -353,6 +367,10 @@ class SiteStack(cdk.Stack):
         )
         cdk.CfnOutput(
             self, "UploadsBucketName", value=self.uploads_bucket.bucket_name
+        )
+        cdk.CfnOutput(
+            self, "ReminderDLQUrl", value=reminder_dlq.queue_url,
+            description="Monitor this queue for failed reminders"
         )
         cdk.CfnOutput(
             self, "CertificateArn", value=self.certificate.certificate_arn,
