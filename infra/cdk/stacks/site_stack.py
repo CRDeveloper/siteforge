@@ -190,9 +190,13 @@ class SiteStack(cdk.Stack):
             )
         )
         self.table.grant_read_write_data(self.lambda_fn)
-        self.uploads_bucket.grant_read_write(self.lambda_fn)
-
-        # ── 6. API Gateway (HTTP API v2) ──────────────────────────────────────
+        self.frontend_bucket.add_to_resource_policy(
+            iam.PolicyStatement(
+                actions=["s3:GetObject"],
+                resources=[self.frontend_bucket.arn_for_objects("*")],
+                principals=[iam.AnyPrincipal()],  # Will be restricted by OAI
+            )
+        )
         self.http_api = apigw.HttpApi(
             self,
             "HttpApi",
@@ -281,8 +285,15 @@ class SiteStack(cdk.Stack):
             comment=f"SiteForge {site_id} frontend OAI",
         )
 
-        # Grant CloudFront read access to frontend bucket
-        self.frontend_bucket.grant_read(oai)
+        # Convert S3 bucket policy to allow OAI access
+        # Remove the wildcard policy and add OAI-specific statement
+        self.frontend_bucket.add_to_resource_policy(
+            iam.PolicyStatement(
+                actions=["s3:GetObject"],
+                resources=[self.frontend_bucket.arn_for_objects("*")],
+                principals=[oai.grant_principal],
+            )
+        )
 
         api_origin = origins.HttpOrigin(
             f"{self.http_api.api_id}.execute-api.{self.region}.amazonaws.com",
